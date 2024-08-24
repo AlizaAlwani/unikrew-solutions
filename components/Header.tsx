@@ -1,35 +1,32 @@
 import { UserButton } from '@clerk/nextjs';
-import {UserResource} from '@clerk/types';
+import { UserResource } from '@clerk/types';
+import Image from 'next/image';
 import Link from 'next/link';
+import unikrewlogo from '@/public/logouni.png'
 
 interface HeaderProps {
-    user: UserResource | null | undefined;
+  user: UserResource | null | undefined;
 }
 
-
-const Header = ({user}: HeaderProps) => {
+const Header = ({ user }: HeaderProps) => {
   return (
-    <div>
-        <div className='h-[100px] w-auto bg-slate-800 gap-y-5 text-white shadow-lg flex justify-between py-5 px-5 '>
-            <div>
-                <h1 className='mt-[16px]'>Logo</h1>
-            </div>
-            <div className='flex gap-3'>
-                <div className='mt-[17px] flex flex-row gap-x-3' >
-            <h1 > Welcome </h1>
-            <Link href={'/profile'}>
-                {user?. username}
-                </Link>
-                </div>
-            <UserButton afterSignOutUrl='/home'/>
-            
-
-            </div>
-            
-
+    <div className="w-full bg-slate-800 text-white shadow-lg py-3 px-3">
+      <div className="max-w-screen-xl mx-auto flex justify-between items-center h-[25px]">
+        <div>
+        <Image src={unikrewlogo} alt="unikrew logo" width={70} />
         </div>
+        <div className="flex gap-3 items-center">
+          <div className="flex gap-x-3">
+            <h1 className="text-md">Welcome</h1>
+            <Link href={'/profile'} className="text-lg font-medium">
+              {user?.username}
+            </Link>
+          </div>
+          <UserButton afterSignOutUrl="/" />
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Header
+export default Header;

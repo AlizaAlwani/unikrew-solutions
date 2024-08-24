@@ -11,18 +11,30 @@ const Home = () => {
   const controls = useAnimation();
 
   useEffect(() => {
-    const sequence = async () => {
-      while (true) {
-        // Typing effect
-        await controls.start({ width: '100%', transition: { duration: 2 } });
-        // Wait for 20 seconds
-        await new Promise(resolve => setTimeout(resolve, 20000));
-        // Erasing effect
-        await controls.start({ width: '0%', transition: { duration: 1 } });
+    let isMounted = true;
+
+    const startAnimationSequence = async () => {
+      if (!isMounted) return;
+
+      try {
+        while (true) {
+          // Typing effect
+          await controls.start({ width: '100%', transition: { duration: 2 } });
+          // Wait for 20 seconds
+          await new Promise(resolve => setTimeout(resolve, 20000));
+          // Erasing effect
+          await controls.start({ width: '0%', transition: { duration: 1 } });
+        }
+      } catch (error) {
+        console.error("Animation error:", error);
       }
     };
 
-    sequence();
+    startAnimationSequence();
+
+    return () => {
+      isMounted = false; // Cleanup flag
+    };
   }, [controls]);
 
   return (
@@ -32,9 +44,11 @@ const Home = () => {
         <Image src={unikrewlogo} alt="unikrew logo" />
       </div>
       <div className="absolute top-5 right-5 flex space-x-4">
-      <Button asChild className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 hover:scale-105 transition duration-200 ease-in-out">
-          <Link href={'/hrportal'}>Sign-in</Link>
-        </Button>
+        <Link href="/hrportal">
+          <Button className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 hover:scale-105 transition duration-200 ease-in-out">
+            Sign-in
+          </Button>
+        </Link>
       </div>
 
       {/* Main Content Area */}
