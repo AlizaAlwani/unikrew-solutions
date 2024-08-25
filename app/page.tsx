@@ -62,7 +62,7 @@ const Home = () => {
           >
             UNIKREW SOLUTIONS
           </motion.h2>
-          <p className="text-lg text-white max-w-lg">
+          <p className="text-lg text-white max-w-lg font-serif" >
             From generating pay slips to checking employee balances, everything is just a single click away.
           </p>
           <Button className="mt-4 bg-yellow-500 text-white px-6 py-3 rounded-full hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out flex justify-center">
