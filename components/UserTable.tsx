@@ -12,7 +12,7 @@ export default function UsersTable({ users }: { users: User[] }) {
   const [jsonData, setJsonData] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  // Function to preview data
+
   function previewData() {
     if (file) {
       const reader = new FileReader();
