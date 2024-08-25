@@ -1,79 +1,94 @@
-"use client";
-import React, { useState, ChangeEvent } from 'react';
-import axios from 'axios';
+// "use client";
 
-const HRPortal = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [status, setStatus] = useState<string>('');
-  const [error, setError] = useState<string>('');
+// import React, { useState } from "react";
+// import * as XLSX from "xlsx";
+// import axios from "axios";
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFile = e.target.files[0];
-      
-      // Check if the file is an Excel file
-      if (selectedFile && selectedFile.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-        setFile(selectedFile);
-        setError(''); // Clear any previous errors
-      } else {
-        setError('Please upload a valid Excel file (.xlsx)');
-        setFile(null);
-      }
-    }
-  };
+// export default function HrPortal() {
+//   const [file, setFile] = useState<File | null>(null);
+//   const [jsonData, setJsonData] = useState("");
+//   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
-  const handleFileUpload = async () => {
-    if (!file) {
-      setError('No file selected or invalid file type');
-      return;
-    }
+//   // Function to preview the data
+//   function previewData() {
+//     if (file) {
+//       const reader = new FileReader();
+//       reader.onload = (e) => {
+//         const data = e.target?.result;
+//         if (data) {
+//           const workbook = XLSX.read(data, { type: "binary" });
+//           const sheetName = workbook.SheetNames[0];
+//           const workSheet = workbook.Sheets[sheetName];
+//           const json = XLSX.utils.sheet_to_json(workSheet);
+//           setJsonData(JSON.stringify(json, null, 2));
+//         }
+//       };
+//       reader.readAsBinaryString(file);
+//     }
+//   }
 
-    const formData = new FormData();
-    formData.append('file', file);
+//   // Function to save the data
+//   async function saveData() {
+//     if (file) {
+//       const reader = new FileReader();
+//       reader.onload = async (e) => {
+//         const data = e.target?.result;
+//         if (data) {
+//           const workbook = XLSX.read(data, { type: "binary" });
+//           const sheetName = workbook.SheetNames[0];
+//           const workSheet = workbook.Sheets[sheetName];
+//           const json = XLSX.utils.sheet_to_json(workSheet);
 
-    try {
-      setStatus('Uploading...');
-      const response = await axios.post('/upload', formData);
+//           try {
+//             const response = await axios.post("/api/upload", { data: json });
+//             setUploadStatus("Upload successful");
+//           } catch (error) {
+//             console.error(error);
+//             setUploadStatus("Upload failed: " + error.message);
+//           }
+//         }
+//       };
+//       reader.readAsBinaryString(file);
+//     }
+//   }
 
-      if (response.status === 200) {
-        setStatus('Processing...');
-        // Simulate a delay for processing
-        setTimeout(() => {
-          setStatus('File parsed and PDF generated successfully!');
-        }, 2000);
-      } else {
-        setStatus(''); // Clear status if not successful
-        setError('Upload failed: ' + response.statusText);
-      }
+//   return (
+//     <div className="container mx-auto py-8">
+//       <h1 className="text-2xl font-bold mb-4">HR Portal</h1>
+//       <input
+//         type="file"
+//         accept=".xls,.xlsx"
+//         onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+//         className="mb-4"
+//       />
+//       <div className="flex gap-4">
+//         <button onClick={previewData} className="btn btn-primary">
+//           Preview Data
+//         </button>
+//         <button onClick={saveData} className="btn btn-success">
+//           Upload File
+//         </button>
+//       </div>
+//       {jsonData && (
+//         <pre className="bg-gray-100 p-4 mt-4 border">{jsonData}</pre>
+//       )}
+//       {uploadStatus && (
+//         <p className="mt-4 text-red-500">{uploadStatus}</p>
+//       )}
+//     </div>
+//   );
+// }
 
-    } catch (err) {
-      setStatus('');
-      setError('Upload failed');
-    }
-  };
+import { getUsers } from "@/actions/Users";
+import UsersTable from "@/components/UserTable";
 
+import React from "react";
+
+export default async function page() {
+  const users = (await getUsers()) || [];
   return (
-    <div className='h-screen bg-[#1A1A1D] p-4 flex flex-col items-center justify-center'>
-      <h1 className='text-3xl font-bold text-white mb-4'>HR Portal</h1>
-      
-      <div className='flex flex-col items-center'>
-        <input 
-          type='file' 
-          accept='.xlsx'
-          onChange={handleFileChange} 
-          className='mb-4 p-2 border border-gray-300 rounded text-white'
-        />
-        <button 
-          onClick={handleFileUpload} 
-          className='bg-blue-500 text-white p-2 rounded'
-        >
-          Upload File
-        </button>
-        {status && <p className='mt-4 text-white'>{status}</p>}
-        {error && <p className='mt-4 text-red-500'>{error}</p>}
-      </div>
-    </div>
+    <main className="min-h-screen max-w-4xl mx-auto">
+      <UsersTable users={users} />
+    </main>
   );
 }
-
-export default HRPortal;

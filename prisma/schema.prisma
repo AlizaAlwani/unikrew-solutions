@@ -35,3 +35,12 @@ model EmployeePay {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
+
+model User {
+  id                String   @id @default(uuid())
+  name  String
+  age  Int
+  city String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
