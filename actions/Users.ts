@@ -2,9 +2,16 @@
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 export type UserProps = {
-  Name: string;
-  Age: number;
-  City: string;
+  name: string;
+  designation: string;
+  department: string;
+  basicSalary: number;
+  hra: number;
+  otherAllowances: number;
+  netSalary: number;
+  bankAccountNumber: string;
+  ifscCode: string;
+  emailId: string;
 };
 export async function getUsers() {
   try {
@@ -18,9 +25,16 @@ export async function createUser(data: UserProps) {
   try {
     const user = await prisma.user.create({
       data: {
-        name: data.Name,
-        age: data.Age,
-        city: data.City,
+        name: data.name,
+        designation: data.designation,
+        department: data.department,
+        basicSalary: data.basicSalary,
+        hra: data.hra,
+        otherAllowances: data.otherAllowances,
+        netSalary: data.netSalary,
+        bankAccountNumber: data.bankAccountNumber,
+        ifscCode: data.ifscCode,
+        emailId: data.emailId,
       },
     });
     revalidatePath("/");
