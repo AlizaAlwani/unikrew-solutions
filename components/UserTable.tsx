@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import {
+  UserProps,
   createBulkUsers,
   deleteUsers,
   generatePaySlip,
-  UserProps,
 } from "@/actions/Users";
 import { User } from "@prisma/client";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
@@ -44,17 +44,10 @@ export default function UsersTable({ users }: { users: User[] }) {
           const workbook = XLSX.read(data, { type: "array" });
           const sheetName = workbook.SheetNames[0];
           const workSheet = workbook.Sheets[sheetName];
-          const json: any[] = XLSX.utils.sheet_to_json(workSheet);
-
-          const plainJson = json.map((item) => {
-            if (item && typeof item === "object") {
-              return JSON.parse(JSON.stringify(item));
-            }
-            return item;
-          });
+          const json: UserProps[] = XLSX.utils.sheet_to_json(workSheet);
 
           try {
-            await createBulkUsers(plainJson as UserProps[]);
+            await createBulkUsers(json);
           } catch (error) {
             console.error("Error saving data:", error);
           } finally {
@@ -136,6 +129,7 @@ export default function UsersTable({ users }: { users: User[] }) {
 
   return (
     <div className="py-12 px-8 bg-gray-50 shadow-xl rounded-lg">
+      {/* Upload Input, Preview, Save, Clear, Generate Pay Slips Buttons */}
       <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8">
         <div className="w-full sm:w-auto">
           <label
@@ -179,50 +173,88 @@ export default function UsersTable({ users }: { users: User[] }) {
           </button>
         </div>
       </div>
+
+      {/* JSON Data Preview */}
       {jsonData && (
         <pre className="p-4 bg-white rounded-md shadow-inner overflow-auto text-sm text-gray-800">
           {jsonData}
         </pre>
       )}
+
+      {/* Loading Indicator */}
       {loading ? (
         <p className="text-blue-600 font-semibold">Processing, please wait...</p>
       ) : (
         <div className="overflow-x-auto">
+          {/* User Data Table */}
           {users && users.length > 0 && (
             <table className="min-w-full bg-white rounded-md shadow overflow-hidden">
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     Name
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     Designation
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     Department
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     Basic Salary
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     HRA
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     Other Allowances
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     Net Salary
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     Bank Account Number
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     IFSC Code
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     Email ID
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  >
                     Actions
                   </th>
                 </tr>
@@ -260,18 +292,12 @@ export default function UsersTable({ users }: { users: User[] }) {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {user.emailId}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
-                        onClick={async () => {
-                          try {
-                            await generatePdf(user);
-                          } catch (error) {
-                            console.error("Error generating PDF:", error);
-                          }
-                        }}
-                        className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all"
+                        onClick={() => generatePdf(user)}
+                        className="text-blue-600 hover:text-blue-900 transition-all"
                       >
-                        Generate PDF
+                        Download Pay Slip
                       </button>
                     </td>
                   </tr>
