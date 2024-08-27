@@ -59,6 +59,14 @@ export async function deleteUsers() {
   }
 }
 
+// In @/actions/Users.ts
+export async function sendEmailWithAttachment(
+  email: string,
+  pdfBytes: Uint8Array
+): Promise<void> {
+  // Implementation for sending email
+}
+
 // Generate a pay slip for a specific user
 export async function generatePaySlip(userId: string) {
   try {

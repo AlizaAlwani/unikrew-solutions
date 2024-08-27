@@ -8,7 +8,7 @@ import {
   generatePaySlip,
 } from "@/actions/Users";
 import { User } from "@prisma/client";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import PaySlipGenerator from "@/components/PaySlipGenerator";
 
 export default function UsersTable({ users }: { users: User[] }) {
   const [file, setFile] = useState<File | null>(null);
@@ -80,51 +80,6 @@ export default function UsersTable({ users }: { users: User[] }) {
     } finally {
       setLoading(false);
     }
-  }
-
-  // Function to generate a PDF pay slip for a single user
-  async function generatePdf(user: User) {
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([600, 400]);
-    const { width, height } = page.getSize();
-
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const fontSize = 12;
-
-    page.drawText(`Salary Slip for ${user.name}`, {
-      x: 50,
-      y: height - 50,
-      size: 18,
-      font,
-      color: rgb(0, 0, 0),
-    });
-
-    const text = `
-      Designation: ${user.designation}
-      Department: ${user.department}
-      Basic Salary: ${user.basicSalary}
-      HRA: ${user.hra}
-      Other Allowances: ${user.otherAllowances}
-      Net Salary: ${user.netSalary}
-      Bank Account Number: ${user.bankAccountNumber}
-      IFSC Code: ${user.ifscCode}
-      Email ID: ${user.emailId}
-    `;
-
-    page.drawText(text, {
-      x: 50,
-      y: height - 100,
-      size: fontSize,
-      font,
-      color: rgb(0, 0, 0),
-    });
-
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: "application/pdf" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${user.name}_Salary_Slip.pdf`;
-    link.click();
   }
 
   return (
@@ -293,12 +248,7 @@ export default function UsersTable({ users }: { users: User[] }) {
                       {user.emailId}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button
-                        onClick={() => generatePdf(user)}
-                        className="text-blue-600 hover:text-blue-900 transition-all"
-                      >
-                        Download Pay Slip
-                      </button>
+                      <PaySlipGenerator user={user} />
                     </td>
                   </tr>
                 ))}
