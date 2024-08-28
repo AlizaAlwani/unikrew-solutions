@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: '16'  # Ensure you're using the correct Node.js version
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install dependencies
         run: pnpm install
 
