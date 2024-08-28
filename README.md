@@ -38,10 +38,13 @@ Configure your .env file with the necessary database credentials.
 pnpm dev
 The application should now be running on http://localhost:3000.
 
-## Deployment
+### Deployment
 The application is deployed using Vercel. 
 
 To deploy:
 1. Link your GitHub repository to Vercel.
 2. Set up environment variables in Vercel as required.
 3. Vercel will handle automatic deployments for every push to the main branch.
+
+### Deployed Link:
+https://unikrew-solutions-hr.vercel.app/
