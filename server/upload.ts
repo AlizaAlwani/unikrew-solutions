@@ -42,24 +42,17 @@ app.post('/upload', upload.single('file'), async (req: Request, res: Response) =
     const data: EmployeePayRow[] = XLSX.utils.sheet_to_json(worksheet);
 
     for (const row of data) {
-      await prisma.employeePay.create({
+      await prisma.user.create({
         data: {
-          employeeId: row.employeeId,
           name: row.name,
           designation: row.designation,
           department: row.department,
-          dateOfJoining: new Date(row.dateOfJoining),
           basicSalary: row.basicSalary,
           hra: row.hra,
           otherAllowances: row.otherAllowances,
-          taxDeductions: row.taxDeductions,
-          pfDeductions: row.pfDeductions,
-          professionalTax: row.professionalTax,
-          grossSalary: row.grossSalary,
-          netSalary: row.netSalary,
+          netSalary: row.grossSalary,
           bankAccountNumber: row.bankAccountNumber,
           ifscCode: row.ifscCode,
-          payDate: new Date(row.payDate),
           emailId: row.emailId,
         }
       });
