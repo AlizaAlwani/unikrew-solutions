@@ -2,7 +2,7 @@ import React from "react";
 import { User } from "@prisma/client";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { saveAs } from "file-saver";
-import logo from "@/public/uni.png"; // Replace with your correct logo path
+import logo from "@/public/uni.png";
 import { FiDownload } from "react-icons/fi";
 
 interface PaySlipFormProps {
@@ -12,15 +12,8 @@ interface PaySlipFormProps {
 export default function PaySlipForm({ user }: PaySlipFormProps) {
   return (
     <div className="">
-      
-
       <footer className="text-center">
-        <button
-          onClick={generatePdf}
-          className=""
-          title="Download PaySlip"
-        >
-          
+        <button onClick={generatePdf} className="" title="Download PaySlip">
           <FiDownload size={20} />
         </button>
       </footer>
@@ -31,17 +24,12 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([600, 400]);
     const { width, height } = page.getSize();
-
-    // Load fonts
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-    // Embed the logo with reduced size
     const logoImageBytes = await fetch(logo.src).then((res) => res.arrayBuffer());
     const pngImage = await pdfDoc.embedPng(logoImageBytes);
-    const pngDims = pngImage.scale(0.25); // Reduced size
-
-    // Place the logo on the top right
+    const pngDims = pngImage.scale(0.25);
+    
     page.drawImage(pngImage, {
       x: width - pngDims.width - 50,
       y: height - pngDims.height - 50,
@@ -49,7 +37,6 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       height: pngDims.height,
     });
 
-    // Unikrew Solution heading centered
     const companyName = "Unikrew Solution (Pvt) Limited";
     const companyNameWidth = boldFont.widthOfTextAtSize(companyName, 18);
 
@@ -58,10 +45,9 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       y: height - 60,
       size: 18,
       font: boldFont,
-      color: rgb(0, 0, 0.5), // Dark blue color
+      color: rgb(0, 0, 0.5),
     });
 
-    // Employee name with "Payslip" heading centered below company name
     const headerText = `${user.name} Payslip`;
     const headerTextWidth = boldFont.widthOfTextAtSize(headerText, 14);
 
@@ -70,10 +56,9 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       y: height - 85,
       size: 14,
       font: boldFont,
-      color: rgb(0.635, 0.529, 0.008), // Golden color
+      color: rgb(0.635, 0.529, 0.008),
     });
 
-    // Employee details with two-column layout
     const leftColumnDetails = [
       `Designation: ${user.designation}`,
       `Department: ${user.department}`,
@@ -85,10 +70,9 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       `IFSC Code: ${user.ifscCode}`,
     ];
 
-    // Adjust yPosition to move details down
-    let yPosition = height - 160; // Increased vertical offset
+    let yPosition = height - 160;
     const leftColumnX = 50;
-    const rightColumnX = width / 2 + 30; // Adjust the right column position
+    const rightColumnX = width / 2 + 30;
 
     leftColumnDetails.forEach((detail) => {
       page.drawText(detail, {
@@ -101,7 +85,7 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       yPosition -= 20;
     });
 
-    yPosition = height - 160; // Reset yPosition for the right column
+    yPosition = height - 160;
     rightColumnDetails.forEach((detail) => {
       page.drawText(detail, {
         x: rightColumnX,
@@ -113,12 +97,10 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       yPosition -= 20;
     });
 
-    // Table grid structure
     yPosition -= 20;
     const tableTop = yPosition;
     const cellHeight = 20;
 
-    // Draw table borders
     page.drawLine({
       start: { x: 50, y: tableTop },
       end: { x: width - 50, y: tableTop },
@@ -136,7 +118,6 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       });
     }
 
-    // Draw vertical lines
     const xPositions = [50, 200, 300, 450, width - 50];
     xPositions.forEach((xPos) => {
       page.drawLine({
@@ -147,16 +128,14 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       });
     });
 
-    // Add light blue background for the header row
     page.drawRectangle({
       x: 50,
       y: tableTop - cellHeight,
       width: width - 100,
       height: cellHeight,
-      color: rgb(0.678, 0.847, 0.902), // Light blue color
+      color: rgb(0.678, 0.847, 0.902),
     });
 
-    // Table header text
     const tableHeaders = ["Earning", "Amount", "Benefits", "Amount"];
     xPositions.slice(0, 4).forEach((xPos, index) => {
       page.drawText(tableHeaders[index], {
@@ -168,7 +147,6 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       });
     });
 
-    // Table content
     const tableData = [
       ["Basic Salary", user.basicSalary.toString(), "Other Allowances", user.otherAllowances.toString()],
       ["", "", "HRA", user.hra.toString()],
@@ -192,7 +170,6 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       yPosition -= cellHeight;
     });
 
-    // Save the PDF
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     saveAs(blob, `${user.name}_Salary_Slip.pdf`);

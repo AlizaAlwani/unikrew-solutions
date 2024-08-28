@@ -19,11 +19,8 @@ const Home = () => {
 
       try {
         while (true) {
-          // Typing effect
           await controls.start({ width: '100%', transition: { duration: 2 } });
-          // Wait for 20 seconds
           await new Promise(resolve => setTimeout(resolve, 20000));
-          // Erasing effect
           await controls.start({ width: '0%', transition: { duration: 1 } });
         }
       } catch (error) {
@@ -34,21 +31,20 @@ const Home = () => {
     startAnimationSequence();
 
     return () => {
-      isMounted = false; // Cleanup flag
+      isMounted = false;
     };
   }, [controls]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { clientX, clientY } = e;
     setPosition({
-      x: (clientX / window.innerWidth) * 20 - 10, // Scaling to move within a range of -10 to 10
+      x: (clientX / window.innerWidth) * 20 - 10,
       y: (clientY / window.innerHeight) * 20 - 10,
     });
   };
 
   return (
     <div className="relative flex h-screen bg-[#1A1A1D] px-16" onMouseMove={handleMouseMove}>
-      {/* Header with Logo and Navigation */}
       <div className="absolute top-5 left-5">
         <Image src={unikrewlogo} alt="unikrew logo" />
       </div>
@@ -60,9 +56,7 @@ const Home = () => {
         </Link>
       </div>
 
-      {/* Main Content Area */}
       <div className="flex w-full h-full items-center px-16">
-        {/* Left Side - Text and Heading */}
         <div className="flex flex-col justify-center items-start text-slate-400 w-1/2 space-y-6">
           <motion.h2
             className="text-6xl font-bold overflow-hidden border-r-2 border-white whitespace-nowrap"
@@ -85,8 +79,6 @@ const Home = () => {
           </Button>
         </div>
 
-
-        {/* Right Side - Credit Card Image with responsive hover effect */}
         <motion.div
           className="flex justify-center items-center w-1/2"
           animate={{ x: position.x, y: position.y }}

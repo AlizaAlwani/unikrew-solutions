@@ -2,7 +2,6 @@
 import { prisma } from "@/lib/db";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
-// Define the UserProps type
 export type UserProps = {
   name: string;
   designation: string;
@@ -16,7 +15,6 @@ export type UserProps = {
   emailId: string;
 };
 
-// Fetch all users from the database
 export async function getUsers() {
   try {
     const users = await prisma.user.findMany();
@@ -26,7 +24,6 @@ export async function getUsers() {
   }
 }
 
-// Create a new user in the database
 export async function createUser(data: UserProps) {
   try {
     const user = await prisma.user.create({
@@ -38,7 +35,6 @@ export async function createUser(data: UserProps) {
   }
 }
 
-// Bulk create users in the database
 export async function createBulkUsers(data: UserProps[]) {
   try {
     const users = await prisma.user.createMany({
@@ -50,7 +46,6 @@ export async function createBulkUsers(data: UserProps[]) {
   }
 }
 
-// Delete all users from the database
 export async function deleteUsers() {
   try {
     await prisma.user.deleteMany();
@@ -59,7 +54,6 @@ export async function deleteUsers() {
   }
 }
 
-// In @/actions/Users.ts
 export async function sendEmailWithAttachment(
   email: string,
   pdfBytes: Uint8Array
@@ -67,7 +61,6 @@ export async function sendEmailWithAttachment(
   // Implementation for sending email
 }
 
-// Generate a pay slip for a specific user
 export async function generatePaySlip(userId: string) {
   try {
     const user = await prisma.user.findUnique({

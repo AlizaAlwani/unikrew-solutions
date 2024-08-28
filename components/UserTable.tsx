@@ -7,8 +7,6 @@ import PaySlipGenerator from "@/components/PaySlipGenerator";
 import { FiDownload, FiMail } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-// Initialize Toast Container at the root of your application
 import { ToastContainer } from "react-toastify";
 
 const SendEmailButton = ({ user }: { user: User }) => {
@@ -103,9 +101,9 @@ export default function UsersTable({ users }: { users: User[] }) {
 
   async function clearData() {
     try {
-      await deleteUsers(); // Clear data from the database
-      setFile(null); // Clear the selected file
-      setJsonData(""); // Clear the previewed JSON data
+      await deleteUsers();
+      setFile(null);
+      setJsonData("");
     } catch (error) {
       console.error("Error clearing data:", error);
     }
@@ -126,7 +124,7 @@ export default function UsersTable({ users }: { users: User[] }) {
 
   return (
     <div className="h-screen w-full flex flex-col items-center bg-gradient-to-r from-slate-50 to-slate-100">
-      <ToastContainer /> {/* Add the ToastContainer here */}
+      <ToastContainer />
       <div className="w-full max-w-screen-lg py-12 px-8 shadow-lg rounded-xl bg-white flex flex-col items-center">
         <div className="w-full flex flex-col items-center gap-6 mb-8">
           <div className="w-full sm:w-auto text-center">
