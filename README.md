@@ -1,7 +1,7 @@
-### HR Portal Web Application
+# HR Portal Web Application
 This project is a web application developed for the HR department to manage employee salary information efficiently. It enables HR personnel to upload Excel files, automatically parse the data, generate individual salary slips in PDF format, and email these PDFs to the respective employees.
 
-# Features
+### Features
 1. Excel Upload: Upload Excel files containing employee salary data.
 2. Data Parsing: Automatically parses the uploaded files to extract salary information.
 3. PDF Generation: Generates salary slips in PDF format for each employee.
@@ -10,15 +10,15 @@ This project is a web application developed for the HR department to manage empl
 6. CI/CD: GitHub Actions are used for continuous integration and deployment.
 7. Deployment: Deployed on Vercel for easy access and scalability.
 
-### Getting Started
+## Getting Started
 
-# Prerequisites
+### Prerequisites
 -> Node.js
 -> PNPM
 -> Git
 -> NeonDB PostgreSQL
 
-# Installation
+### Installation
 
 1. Clone the repository:
 
@@ -38,7 +38,7 @@ Configure your .env file with the necessary database credentials.
 pnpm dev
 The application should now be running on http://localhost:3000.
 
-# Deployment
+## Deployment
 The application is deployed using Vercel. 
 
 To deploy:
