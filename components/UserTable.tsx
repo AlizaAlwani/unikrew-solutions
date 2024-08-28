@@ -16,8 +16,8 @@ const SendEmailButton = ({ user }: { user: User }) => {
 
   async function sendEmail() {
     try {
-      setEmailStatus(`Email sent successfully to ${user.emailId}!`);
-      toast.success(`Email sent successfully to ${user.emailId}!`, {
+      setEmailStatus(`Email sent successfully to ${user.name}!`);
+      toast.success(`Email sent successfully to ${user.name}!`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -294,8 +294,6 @@ export default function UsersTable({ users }: { users: User[] }) {
             )}
           </div>
         )}
-
-        
       </div>
     </div>
   );
