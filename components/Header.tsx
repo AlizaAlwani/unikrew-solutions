@@ -16,10 +16,10 @@ const Header = ({ user }: HeaderProps) => {
         <Image src={unikrewlogo} alt="unikrew logo" width={70} />
         </div>
         <div className="flex gap-3 items-center">
-          <div className="flex gap-x-3">
-            <h1 className="text-md">Welcome</h1>
-            <Link href={'/profile'} className="text-lg font-medium">
-              {user?.username}
+          <div className="flex gap-x-2">
+            <h1 className="text-md font-thin">Welcome</h1>
+            <Link href={'/profile'} className="text-md font-thin">
+              {user?.fullName}
             </Link>
           </div>
           <UserButton afterSignOutUrl="/" />

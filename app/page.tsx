@@ -54,7 +54,7 @@ const Home = () => {
       </div>
       <div className="absolute top-5 right-5 flex space-x-4">
         <Link href="/hrportal">
-          <Button className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 hover:scale-105 transition duration-200 ease-in-out">
+          <Button className="bg-yellow-500 text-white px-4 py-2 font-bold rounded-full hover:bg-yellow-600 hover:scale-105 transition duration-200 ease-in-out">
             Sign-in
           </Button>
         </Link>
@@ -64,28 +64,35 @@ const Home = () => {
       <div className="flex w-full h-full items-center px-16">
         {/* Left Side - Text and Heading */}
         <div className="flex flex-col justify-center items-start text-slate-400 w-1/2 space-y-6">
-          <motion.h2 
-            className="text-5xl font-bold overflow-hidden border-r-2 border-white whitespace-nowrap"
+          <motion.h2
+            className="text-6xl font-bold overflow-hidden border-r-2 border-white whitespace-nowrap"
             animate={controls}
             initial={{ width: '0%' }}
           >
-            UNIKREW SOLUTIONS
+            UNIKREW SOLUTION
           </motion.h2>
-          <p className="text-lg text-white max-w-lg font-serif">
-            From generating pay slips to checking employee balances, everything is just a single click away.
+          <p className="text-lg text-white/70 font-mono max-w-full leading-tight">
+            <span className="inline-block align-baseline whitespace-nowrap ">
+              From generating pay slips to checking employee balances,
+            </span>
+            <br />
+            <span className="inline-block align-baseline">
+              everything is just a single click away.
+            </span>
           </p>
-          <Button className="mt-4 bg-yellow-500 text-white px-6 py-3 rounded-full hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out flex justify-center">
+          <Button className="mt-4 bg-yellow-500 text-white text-center font-bold px-6 py-3 rounded-full hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out flex justify-center">
             HR Portal
           </Button>
         </div>
 
+
         {/* Right Side - Credit Card Image with responsive hover effect */}
-        <motion.div 
+        <motion.div
           className="flex justify-center items-center w-1/2"
           animate={{ x: position.x, y: position.y }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
-          <Image 
+          <Image
             src={creditcard}
             alt="Credit Card"
             width={550}

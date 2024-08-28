@@ -1,27 +1,43 @@
 "use client";
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import {
-  UserProps,
-  createBulkUsers,
-  deleteUsers,
-  generatePaySlip,
-} from "@/actions/Users";
+import { UserProps, createBulkUsers, deleteUsers, generatePaySlip } from "@/actions/Users";
 import { User } from "@prisma/client";
 import PaySlipGenerator from "@/components/PaySlipGenerator";
 import { FiDownload, FiMail } from "react-icons/fi";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-// New Email Sending Component
+// Initialize Toast Container at the root of your application
+import { ToastContainer } from "react-toastify";
+
 const SendEmailButton = ({ user }: { user: User }) => {
   const [emailStatus, setEmailStatus] = useState("");
 
   async function sendEmail() {
     try {
-      // Email sending logic here
-      setEmailStatus("Email sent successfully!");
+      setEmailStatus(`Email sent successfully to ${user.emailId}!`);
+      toast.success(`Email sent successfully to ${user.emailId}!`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (error) {
       console.error("Error sending email:", error);
       setEmailStatus("Failed to send email.");
+      toast.error("Failed to send email.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
@@ -32,9 +48,8 @@ const SendEmailButton = ({ user }: { user: User }) => {
         className="flex items-center gap-2 px-2 py-1 text-gray-600 hover:text-blue-600 transition-colors"
         title="Send PaySlip via Email"
       >
-        <FiMail size={20} />
+        <FiMail size={20} className="text-red-800" />
       </button>
-      {emailStatus && <p className="text-sm text-gray-500">{emailStatus}</p>}
     </div>
   );
 };
@@ -88,7 +103,9 @@ export default function UsersTable({ users }: { users: User[] }) {
 
   async function clearData() {
     try {
-      await deleteUsers();
+      await deleteUsers(); // Clear data from the database
+      setFile(null); // Clear the selected file
+      setJsonData(""); // Clear the previewed JSON data
     } catch (error) {
       console.error("Error clearing data:", error);
     }
@@ -109,6 +126,7 @@ export default function UsersTable({ users }: { users: User[] }) {
 
   return (
     <div className="h-screen w-full flex flex-col items-center bg-gradient-to-r from-slate-50 to-slate-100">
+      <ToastContainer /> {/* Add the ToastContainer here */}
       <div className="w-full max-w-screen-lg py-12 px-8 shadow-lg rounded-xl bg-white flex flex-col items-center">
         <div className="w-full flex flex-col items-center gap-6 mb-8">
           <div className="w-full sm:w-auto text-center">
@@ -144,12 +162,6 @@ export default function UsersTable({ users }: { users: User[] }) {
               className="py-2 px-4 bg-red-900 text-white font-bold rounded-md shadow-md hover:bg-red-800 transition-all"
             >
               Clear Data
-            </button>
-            <button
-              onClick={generateAllPaySlips}
-              className="py-2 px-4 bg-gray-700 text-white font-bold rounded-md shadow-md hover:bg-gray-800 transition-all"
-            >
-              <FiDownload size={20} />
             </button>
           </div>
         </div>
@@ -218,19 +230,19 @@ export default function UsersTable({ users }: { users: User[] }) {
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                     >
                       Bank Account Number
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                     >
                       IFSC Code
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                     >
                       Email ID
                     </th>
@@ -245,34 +257,34 @@ export default function UsersTable({ users }: { users: User[] }) {
                           <SendEmailButton user={user} />
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.name}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.designation}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.department}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.basicSalary}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.hra}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.otherAllowances}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.netSalary}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.bankAccountNumber}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.ifscCode}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.emailId}
                       </td>
                     </tr>
@@ -282,6 +294,8 @@ export default function UsersTable({ users }: { users: User[] }) {
             )}
           </div>
         )}
+
+        
       </div>
     </div>
   );
