@@ -28,4 +28,4 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           pnpm run build
-          pnpm run deploy:prod
+          pnpm run deploy
