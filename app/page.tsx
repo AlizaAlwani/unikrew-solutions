@@ -4,11 +4,12 @@ import Image from 'next/image';
 import creditcard from '@/public/creditcard.png';
 import unikrewlogo from '@/public/logouni.png';
 import { motion, useAnimation } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 const Home = () => {
   const controls = useAnimation();
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     let isMounted = true;
@@ -37,8 +38,16 @@ const Home = () => {
     };
   }, [controls]);
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const { clientX, clientY } = e;
+    setPosition({
+      x: (clientX / window.innerWidth) * 20 - 10, // Scaling to move within a range of -10 to 10
+      y: (clientY / window.innerHeight) * 20 - 10,
+    });
+  };
+
   return (
-    <div className="relative flex h-screen bg-[#1A1A1D] px-16">
+    <div className="relative flex h-screen bg-[#1A1A1D] px-16" onMouseMove={handleMouseMove}>
       {/* Header with Logo and Navigation */}
       <div className="absolute top-5 left-5">
         <Image src={unikrewlogo} alt="unikrew logo" />
@@ -62,7 +71,7 @@ const Home = () => {
           >
             UNIKREW SOLUTIONS
           </motion.h2>
-          <p className="text-lg text-white max-w-lg font-serif" >
+          <p className="text-lg text-white max-w-lg font-serif">
             From generating pay slips to checking employee balances, everything is just a single click away.
           </p>
           <Button className="mt-4 bg-yellow-500 text-white px-6 py-3 rounded-full hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out flex justify-center">
@@ -70,8 +79,12 @@ const Home = () => {
           </Button>
         </div>
 
-        {/* Right Side - Credit Card Image */}
-        <div className="flex justify-center items-center w-1/2">
+        {/* Right Side - Credit Card Image with responsive hover effect */}
+        <motion.div 
+          className="flex justify-center items-center w-1/2"
+          animate={{ x: position.x, y: position.y }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
           <Image 
             src={creditcard}
             alt="Credit Card"
@@ -79,7 +92,7 @@ const Home = () => {
             height={400}
             className="drop-shadow-xl"
           />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

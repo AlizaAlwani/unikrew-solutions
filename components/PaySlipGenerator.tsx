@@ -3,6 +3,7 @@ import { User } from "@prisma/client";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { saveAs } from "file-saver";
 import logo from "@/public/uni.png"; // Replace with your correct logo path
+import { FiDownload } from "react-icons/fi";
 
 interface PaySlipFormProps {
   user: User;
@@ -10,22 +11,17 @@ interface PaySlipFormProps {
 
 export default function PaySlipForm({ user }: PaySlipFormProps) {
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md">
-      <header className="mb-4">
-        {/* <h1 className="text-2xl font-bold text-center text-gray-700">
-          Pay Slip Generator
-        </h1>
-        <p className="text-center text-sm text-gray-500">
-          Click the button below to generate and download the pay slip.
-        </p> */}
-      </header>
+    <div className="">
+      
 
       <footer className="text-center">
         <button
           onClick={generatePdf}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all"
+          className=""
+          title="Download PaySlip"
         >
-          Generate Pay Slip
+          
+          <FiDownload size={20} />
         </button>
       </footer>
     </div>

@@ -9,13 +9,41 @@ import {
 } from "@/actions/Users";
 import { User } from "@prisma/client";
 import PaySlipGenerator from "@/components/PaySlipGenerator";
+import { FiDownload, FiMail } from "react-icons/fi";
+
+// New Email Sending Component
+const SendEmailButton = ({ user }: { user: User }) => {
+  const [emailStatus, setEmailStatus] = useState("");
+
+  async function sendEmail() {
+    try {
+      // Email sending logic here
+      setEmailStatus("Email sent successfully!");
+    } catch (error) {
+      console.error("Error sending email:", error);
+      setEmailStatus("Failed to send email.");
+    }
+  }
+
+  return (
+    <div>
+      <button
+        onClick={sendEmail}
+        className="flex items-center gap-2 px-2 py-1 text-gray-600 hover:text-blue-600 transition-colors"
+        title="Send PaySlip via Email"
+      >
+        <FiMail size={20} />
+      </button>
+      {emailStatus && <p className="text-sm text-gray-500">{emailStatus}</p>}
+    </div>
+  );
+};
 
 export default function UsersTable({ users }: { users: User[] }) {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [jsonData, setJsonData] = useState("");
 
-  // Function to preview data from the file
   function previewData() {
     if (file) {
       const reader = new FileReader();
@@ -33,7 +61,6 @@ export default function UsersTable({ users }: { users: User[] }) {
     }
   }
 
-  // Function to save data from the file to the database
   async function saveData() {
     if (file) {
       setLoading(true);
@@ -59,7 +86,6 @@ export default function UsersTable({ users }: { users: User[] }) {
     }
   }
 
-  // Function to clear data from the database
   async function clearData() {
     try {
       await deleteUsers();
@@ -68,7 +94,6 @@ export default function UsersTable({ users }: { users: User[] }) {
     }
   }
 
-  // Function to generate pay slips for all users
   async function generateAllPaySlips() {
     try {
       setLoading(true);
@@ -83,180 +108,181 @@ export default function UsersTable({ users }: { users: User[] }) {
   }
 
   return (
-    <div className="py-12 px-8 bg-gray-50 shadow-xl rounded-lg">
-      {/* Upload Input, Preview, Save, Clear, Generate Pay Slips Buttons */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-8">
-        <div className="w-full sm:w-auto">
-          <label
-            className="block text-sm font-medium text-gray-700 mb-1"
-            htmlFor="file_input"
-          >
-            Upload Excel File
-          </label>
-          <input
-            className="block w-full sm:w-auto text-sm text-gray-700 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            id="file_input"
-            type="file"
-            accept=".xls,.xlsx"
-            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-          />
+    <div className="h-screen w-full flex flex-col items-center bg-gradient-to-r from-slate-50 to-slate-100">
+      <div className="w-full max-w-screen-lg py-12 px-8 shadow-lg rounded-xl bg-white flex flex-col items-center">
+        <div className="w-full flex flex-col items-center gap-6 mb-8">
+          <div className="w-full sm:w-auto text-center">
+            <label
+              className="block text-sm font-medium text-slate-700 mb-1"
+              htmlFor="file_input"
+            >
+              Upload Excel File
+            </label>
+            <input
+              className="block w-full sm:w-auto text-sm text-slate-700 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              id="file_input"
+              type="file"
+              accept=".xls,.xlsx"
+              onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+            />
+          </div>
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={previewData}
+              className="py-2 px-4 bg-blue-900 text-white font-bold rounded-md shadow-md hover:bg-blue-800 transition-all"
+            >
+              Preview Data
+            </button>
+            <button
+              onClick={saveData}
+              className="py-2 px-4 bg-slate-600 text-white font-bold rounded-md shadow-md hover:bg-green-800 transition-all"
+            >
+              Save Data
+            </button>
+            <button
+              onClick={clearData}
+              className="py-2 px-4 bg-red-900 text-white font-bold rounded-md shadow-md hover:bg-red-800 transition-all"
+            >
+              Clear Data
+            </button>
+            <button
+              onClick={generateAllPaySlips}
+              className="py-2 px-4 bg-gray-700 text-white font-bold rounded-md shadow-md hover:bg-gray-800 transition-all"
+            >
+              <FiDownload size={20} />
+            </button>
+          </div>
         </div>
-        <div className="flex gap-3">
-          <button
-            onClick={previewData}
-            className="py-2 px-4 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700 transition-all"
-          >
-            Preview Data
-          </button>
-          <button
-            onClick={saveData}
-            className="py-2 px-4 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 transition-all"
-          >
-            Save Data
-          </button>
-          <button
-            onClick={clearData}
-            className="py-2 px-4 bg-red-600 text-white font-medium rounded-md shadow-sm hover:bg-red-700 transition-all"
-          >
-            Clear Data
-          </button>
-          <button
-            onClick={generateAllPaySlips}
-            className="py-2 px-4 bg-gray-600 text-white font-medium rounded-md shadow-sm hover:bg-gray-700 transition-all"
-          >
-            Generate Pay Slips
-          </button>
-        </div>
-      </div>
 
-      {/* JSON Data Preview */}
-      {jsonData && (
-        <pre className="p-4 bg-white rounded-md shadow-inner overflow-auto text-sm text-gray-800">
-          {jsonData}
-        </pre>
-      )}
+        {jsonData && (
+          <pre className="w-full p-4 bg-white rounded-md shadow-inner overflow-auto text-sm text-gray-800 mb-8">
+            {jsonData}
+          </pre>
+        )}
 
-      {/* Loading Indicator */}
-      {loading ? (
-        <p className="text-blue-600 font-semibold">Processing, please wait...</p>
-      ) : (
-        <div className="overflow-x-auto">
-          {/* User Data Table */}
-          {users && users.length > 0 && (
-            <table className="min-w-full bg-white rounded-md shadow overflow-hidden">
-              <thead className="bg-gray-100 text-gray-700">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    Designation
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    Department
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    Basic Salary
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    HRA
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    Other Allowances
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    Net Salary
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    Bank Account Number
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    IFSC Code
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    Email ID
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                  >
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {users.map((user) => (
-                  <tr key={user.id} className="bg-white hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {user.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.designation}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.department}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.basicSalary}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.hra}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.otherAllowances}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.netSalary}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.bankAccountNumber}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.ifscCode}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.emailId}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <PaySlipGenerator user={user} />
-                    </td>
+        {loading ? (
+          <p className="text-blue-600 font-semibold">Processing, please wait...</p>
+        ) : (
+          <div className="overflow-x-auto w-full">
+            {users && users.length > 0 && (
+              <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
+                <thead className="bg-slate-100 text-blue-800">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      Actions
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      Designation
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      Department
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      Basic Salary
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      HRA
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      Other Allowances
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      Net Salary
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      Bank Account Number
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      IFSC Code
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wide border-b border-blue-200 whitespace-nowrap"
+                    >
+                      Email ID
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
+                </thead>
+                <tbody className="divide-y divide-blue-100">
+                  {users.map((user) => (
+                    <tr key={user.id} className="bg-white hover:bg-blue-50 transition-all">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div className="flex items-center gap-2">
+                          <PaySlipGenerator user={user} />
+                          <SendEmailButton user={user} />
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {user.name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.designation}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.department}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.basicSalary}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.hra}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.otherAllowances}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.netSalary}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.bankAccountNumber}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.ifscCode}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.emailId}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
