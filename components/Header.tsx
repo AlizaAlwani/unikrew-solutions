@@ -10,7 +10,7 @@ interface HeaderProps {
 
 const Header = ({ user }: HeaderProps) => {
   return (
-    <div className="w-full bg-[#1A1A1D] text-white shadow-lg py-3 px-3">
+    <div className="w-full bg-[#1A1A1D] text-white shadow-lg py-3 px-3 fixed">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center h-[25px]">
         <div>
         <Image src={unikrewlogo} alt="unikrew logo" width={70} />

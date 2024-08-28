@@ -8,6 +8,7 @@ import { FiDownload, FiMail } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { Input } from "./ui/input";
 
 const SendEmailButton = ({ user }: { user: User }) => {
   const [emailStatus, setEmailStatus] = useState("");
@@ -123,18 +124,18 @@ export default function UsersTable({ users }: { users: User[] }) {
   }
 
   return (
-    <div className="h-screen w-full flex flex-col items-center bg-gradient-to-r from-slate-50 to-slate-100">
+    <div className="h-screen w-full flex flex-col items-center mt-10">
       <ToastContainer />
       <div className="w-full max-w-screen-lg py-12 px-8 shadow-lg rounded-xl bg-white flex flex-col items-center">
         <div className="w-full flex flex-col items-center gap-6 mb-8">
-          <div className="w-full sm:w-auto text-center">
+          <div className="w-full sm:w-auto text-center ">
             <label
-              className="block text-sm font-medium text-slate-700 mb-1"
+              className="block text-lg font-semibold text-blue-900 mb-1 "
               htmlFor="file_input"
             >
               Upload Excel File
             </label>
-            <input
+            <Input
               className="block w-full sm:w-auto text-sm text-slate-700 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               id="file_input"
               type="file"
