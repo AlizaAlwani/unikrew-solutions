@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import creditcard from '@/public/creditcard.png';
-import unikrewlogo from '@/public/logouni.png';
+import unikrewlogo from '@/public/newlogo.png';
 import { motion, useAnimation } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -46,7 +46,7 @@ const Home = () => {
   return (
     <div className="relative flex h-screen bg-[#1A1A1D] px-16" onMouseMove={handleMouseMove}>
       <div className="absolute top-5 left-5">
-        <Image src={unikrewlogo} alt="unikrew logo" />
+        <Image src={unikrewlogo} alt="unikrew logo" width={120} />
       </div>
       <div className="absolute top-5 right-5 flex space-x-4">
         <Link href="/hrportal">
@@ -63,7 +63,7 @@ const Home = () => {
             animate={controls}
             initial={{ width: '0%' }}
           >
-            UNIKREW SOLUTION
+            VERSATILE SOLUTION
           </motion.h2>
           <p className="text-lg text-white/70 font-mono max-w-full leading-tight">
             <span className="inline-block align-baseline">

@@ -2,7 +2,7 @@ import { UserButton } from '@clerk/nextjs';
 import { UserResource } from '@clerk/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import unikrewlogo from '@/public/logouni.png'
+import unikrewlogo from '@/public/newlogo.png'
 
 interface HeaderProps {
   user: UserResource | null | undefined;

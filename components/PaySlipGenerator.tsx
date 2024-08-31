@@ -2,7 +2,7 @@ import React from "react";
 import { User } from "@prisma/client";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { saveAs } from "file-saver";
-import logo from "@/public/uni.png";
+import logo from "@/public/payslip logo.png";
 import { FiDownload } from "react-icons/fi";
 
 interface PaySlipFormProps {
@@ -37,7 +37,7 @@ export default function PaySlipForm({ user }: PaySlipFormProps) {
       height: pngDims.height,
     });
 
-    const companyName = "Unikrew Solution (Pvt) Limited";
+    const companyName = "Versatile Solution (Pvt) Limited";
     const companyNameWidth = boldFont.widthOfTextAtSize(companyName, 18);
 
     page.drawText(companyName, {
